@@ -7,7 +7,17 @@ public class Program
     public static void Main(string[] args)
     {
         var builder = WebApplication.CreateBuilder(args);
-
+        
+        // Register CORS policy
+        builder.Services.AddCors(options =>
+        {
+            options.AddPolicy("AllowViteDevClient", policy =>
+            {
+                policy.WithOrigins("http://localhost:5174")
+                    .AllowAnyHeader()
+                    .AllowAnyMethod();
+            });
+        });
 
         // Load .env file (optional: specify path if not root)
         DotNetEnv.Env.Load();
@@ -23,12 +33,18 @@ public class Program
         builder.Services.AddScoped<QuestionService>();
         builder.Services.AddHttpClient<QuestionService>();
         
+        builder.Services.AddScoped<AudioService>();
+        builder.Services.AddHttpClient<AudioService>();
+        
         builder.Services.AddControllers();
         // Learn more about configuring OpenAPI at https://aka.ms/aspnet/openapi
         builder.Services.AddOpenApi();
 
         var app = builder.Build();
-
+        
+        // Use CORS middleware
+        app.UseCors("AllowViteDevClient");
+        
         // Configure the HTTP request pipeline.
         if (app.Environment.IsDevelopment())
         {

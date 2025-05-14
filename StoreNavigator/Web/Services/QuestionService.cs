@@ -15,9 +15,8 @@ public class QuestionService
         _httpClient = httpClient;
         _options = options.Value;
     }
-
-
-    public async Task<QuestionServiceResult> Execute(string question)
+    
+    public async Task<QuestionServiceResult> GetRackNumber(string question)
     {
         var combinedJsons = new StringBuilder();
         var listRacks = new List<string> { "1", "2", "3" };
@@ -74,21 +73,7 @@ public class QuestionService
             .GetProperty("message")
             .GetProperty("content")
             .GetString();
-
+        
         return new QuestionServiceResult(true, response, message);
     }
-}
-
-public class QuestionServiceResult
-{
-    public QuestionServiceResult(bool isSuccess, HttpResponseMessage response, string? message)
-    {
-        IsSuccess = isSuccess;
-        HttpResponse = response;
-        Answer = message;
-    }
-    public bool IsSuccess { get; set; } = false;
-
-    public HttpResponseMessage HttpResponse { get; set; } 
-    public string? Answer { get; set; }
 }

@@ -4,6 +4,7 @@ using System.Text.Json;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Options;
 using Web.Requests;
+using Web.Services;
 
 namespace Web.Controllers;
 
@@ -11,17 +12,16 @@ namespace Web.Controllers;
 [Route("[controller]")]
 public class AudioController : ControllerBase
 {
-    private readonly ILogger<AudioController> _logger;
     private readonly HttpClient _httpClient;
-    private readonly IConfiguration _configuration;
     private readonly OpenAiOptions _openAiOptions;
+    private readonly AudioService _audioService;
+    
     
     public AudioController(ILogger<AudioController> logger,
         IConfiguration configuration,
-        IOptions<OpenAiOptions> openAi)
+        IOptions<OpenAiOptions> openAi, AudioService audioService)
     {
-        _logger = logger;
-        _configuration = configuration;
+        _audioService = audioService;
         _httpClient = new HttpClient();
         _openAiOptions = openAi.Value;
     }
@@ -36,12 +36,6 @@ public class AudioController : ControllerBase
         return Ok(new { apiKey, voice });
     }
 
-    [HttpPost]
-    public IActionResult Test()
-    {
-        return Ok(new { apiKey = _openAiOptions.ApiKey });
-    }
-    
     [HttpPost("speak")]
     public async Task<IActionResult> Speak([FromBody] TextRequest request)
     {
@@ -77,5 +71,16 @@ public class AudioController : ControllerBase
         await System.IO.File.WriteAllBytesAsync(outputPath, audioBytes);
 
         return Ok(new { message = "Audio saved", path = outputPath });
+    }
+
+    [HttpPost("speak-with-service")]
+    public async Task<IActionResult> SpeakWithService(int rackNumber)
+    {
+        var numberString = rackNumber.ToString();
+        var result = await _audioService.Execute(numberString);
+        if(!result.IsSuccess)
+            return StatusCode((int)result.HttpResponse.StatusCode, await result.HttpResponse.Content.ReadAsStringAsync());
+        
+        return Ok(result.Path);
     }
 }

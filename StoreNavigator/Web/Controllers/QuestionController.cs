@@ -15,11 +15,15 @@ public class QuestionController : ControllerBase
     private readonly OpenAiOptions _options;
     private readonly HttpClient _httpClient;
     private readonly QuestionService _questionService;
+    private readonly AudioService _audioService;
 
-    public QuestionController(IOptions<OpenAiOptions> options, 
-        QuestionService questionService)
+    public QuestionController(
+        IOptions<OpenAiOptions> options, 
+        QuestionService questionService,
+        AudioService audioService)
     {
         _questionService = questionService;
+        _audioService = audioService;
         _options = options.Value;
         _httpClient = new HttpClient();
     }
@@ -95,10 +99,39 @@ public class QuestionController : ControllerBase
         if (string.IsNullOrWhiteSpace(request.Question))
             return BadRequest("Question is required.");
 
-        var result = await _questionService.Execute(request.Question);
-        if (!result.IsSuccess)
-            return StatusCode((int)result.HttpResponse.StatusCode, await result.HttpResponse.Content.ReadAsStringAsync());
+        var questionServiceResult = await _questionService.GetRackNumber(request.Question);
+        if (!questionServiceResult.IsSuccess)
+            return StatusCode((int)questionServiceResult.HttpResponse.StatusCode, await questionServiceResult.HttpResponse.Content.ReadAsStringAsync());
         
-        return Ok(result);
+        if(questionServiceResult.RackNumber is null)
+            return BadRequest("Rack number is invalid.");
+        
+        var audioServiceResult = await _audioService.Execute(questionServiceResult.RackNumber);
+        if(!audioServiceResult.IsSuccess)
+            return StatusCode((int)audioServiceResult.HttpResponse.StatusCode, await audioServiceResult.HttpResponse.Content.ReadAsStringAsync());
+        
+        
+        return Ok(audioServiceResult.Path);
+    }
+    
+    [HttpPost("responseWithAudioFile")]
+    public async Task<IActionResult> ResponseWithAudioFile([FromBody] QuestionRequest request)
+    {
+        if (string.IsNullOrWhiteSpace(request.Question))
+            return BadRequest("Question is required.");
+
+        var questionServiceResult = await _questionService.GetRackNumber(request.Question);
+        if (!questionServiceResult.IsSuccess)
+            return StatusCode((int)questionServiceResult.HttpResponse.StatusCode, await questionServiceResult.HttpResponse.Content.ReadAsStringAsync());
+        
+        if(questionServiceResult.RackNumber is null)
+            return BadRequest("Rack number is invalid.");
+        
+        var audioServiceResult = await _audioService.Execute(questionServiceResult.RackNumber);
+        if(!audioServiceResult.IsSuccess)
+            return StatusCode((int)audioServiceResult.HttpResponse.StatusCode, await audioServiceResult.HttpResponse.Content.ReadAsStringAsync());
+        
+        
+        return Ok(audioServiceResult.Path);
     }
 }
