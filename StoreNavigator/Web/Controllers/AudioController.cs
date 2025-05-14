@@ -3,6 +3,7 @@ using System.Text;
 using System.Text.Json;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Options;
+using Web.Requests;
 
 namespace Web.Controllers;
 
@@ -33,6 +34,12 @@ public class AudioController : ControllerBase
         var model = _openAiOptions.Model;
         var path = _openAiOptions.AudioOutputPath;
         return Ok(new { apiKey, voice });
+    }
+
+    [HttpPost]
+    public IActionResult Test()
+    {
+        return Ok(new { apiKey = _openAiOptions.ApiKey });
     }
     
     [HttpPost("speak")]
@@ -71,9 +78,4 @@ public class AudioController : ControllerBase
 
         return Ok(new { message = "Audio saved", path = outputPath });
     }
-}
-
-public class TextRequest
-{
-    public string Text { get; set; } = "";
 }

@@ -1,0 +1,49 @@
+```json
+{
+  "rackNumber": 1,
+  "categories": [
+    {
+      "name": "Shampoo",
+      "subcategories": [
+        {
+          "name": "Herbal Shampoo",
+          "brands": [
+            "Brand X",
+            "Brand Y"
+          ]
+        },
+        {
+          "name": "Color Protect Shampoo",
+          "brands": [
+            "Brand Z"
+          ]
+        },
+        {
+          "name": "Moisturizing Shampoo",
+          "brands": [
+            "Brand A"
+          ]
+        }
+      ]
+    },
+    {
+      "name": "Conditioner",
+      "subcategories": [
+        {
+          "name": "Deep Conditioning",
+          "brands": [
+            "Brand B",
+            "Brand C"
+          ]
+        },
+        {
+          "name": "Volumizing Conditioner",
+          "brands": [
+            "Brand D"
+          ]
+        }
+      ]
+    }
+  ]
+}
+```

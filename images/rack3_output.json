@@ -1,0 +1,67 @@
+{
+  "rack_number": 3,
+  "product_categories": [
+    {
+      "category": "Oils and Vinegars",
+      "subcategories": [
+        {
+          "name": "Olive Oil",
+          "products": [
+            "Extra Virgin Olive Oil",
+            "Pure Olive Oil",
+            "Organic Olive Oil"
+          ]
+        },
+        {
+          "name": "Sunflower Oil",
+          "products": [
+            "Refined Sunflower Oil",
+            "Organic Sunflower Oil"
+          ]
+        },
+        {
+          "name": "Canola Oil",
+          "products": [
+            "Canola Oil"
+          ]
+        },
+        {
+          "name": "Other Oils",
+          "products": [
+            "Coconut Oil",
+            "Grapeseed Oil"
+          ]
+        },
+        {
+          "name": "Vinegars",
+          "products": [
+            "Red Wine Vinegar"
+          ]
+        }
+      ]
+    },
+    {
+      "category": "Condiments",
+      "subcategories": [
+        {
+          "name": "Salad Dressings",
+          "products": [
+            "Vinaigrette"
+          ]
+        }
+      ]
+    },
+    {
+      "category": "Baking",
+      "subcategories": [
+        {
+          "name": "Flour and Mixes",
+          "products": [
+            "Flour Mix"
+          ]
+        }
+      ]
+    }
+  ]
+}
+```

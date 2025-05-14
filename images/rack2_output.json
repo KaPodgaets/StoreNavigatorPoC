@@ -1,0 +1,38 @@
+```json
+{
+  "StoreRack": {
+    "RackNumber": 2,
+    "Categories": [
+      {
+        "Category": "Personal Care",
+        "Subcategories": [
+          {
+            "Subcategory": "Shampoo",
+            "Products": [
+              "Herbal Shampoo",
+              "Men's Shampoo",
+              "Moisturizing Shampoo"
+            ]
+          },
+          {
+            "Subcategory": "Shower Gel",
+            "Products": [
+              "Axe Shower Gel",
+              "Men's Shower Gel",
+              "Herbal Shower Gel"
+            ]
+          },
+          {
+            "Subcategory": "Body Wash",
+            "Products": [
+              "Dove Body Wash",
+              "Moisturizing Body Wash",
+              "Oat Body Wash"
+            ]
+          }
+        ]
+      }
+    ]
+  }
+}
+```
