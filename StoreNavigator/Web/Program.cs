@@ -1,3 +1,5 @@
+using Web.Services;
+
 namespace Web;
 
 public class Program
@@ -18,6 +20,9 @@ public class Program
         var configuration = builder.Configuration;
 
         // Add services to the container.
+        builder.Services.AddScoped<QuestionService>();
+        builder.Services.AddHttpClient<QuestionService>();
+        
         builder.Services.AddControllers();
         // Learn more about configuring OpenAPI at https://aka.ms/aspnet/openapi
         builder.Services.AddOpenApi();

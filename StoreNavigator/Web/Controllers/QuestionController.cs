@@ -1,21 +1,25 @@
 ﻿using System.Net.Http.Headers;
 using System.Text;
 using System.Text.Json;
-using Microsoft.AspNetCore.Components;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Options;
+using Web.Requests;
+using Web.Services;
 
 namespace Web.Controllers;
 
 [ApiController]
-[Microsoft.AspNetCore.Mvc.Route("api/[controller]")]
+[Route("api/[controller]")]
 public class QuestionController : ControllerBase
 {
     private readonly OpenAiOptions _options;
     private readonly HttpClient _httpClient;
+    private readonly QuestionService _questionService;
 
-    public QuestionController(IOptions<OpenAiOptions> options)
+    public QuestionController(IOptions<OpenAiOptions> options, 
+        QuestionService questionService)
     {
+        _questionService = questionService;
         _options = options.Value;
         _httpClient = new HttpClient();
     }
@@ -84,9 +88,17 @@ public class QuestionController : ControllerBase
 
         return Ok(new { response = message?.Trim() ?? "-1" });
     }
-}
+    
+    [HttpPost("responseWithAudio")]
+    public async Task<IActionResult> ResponseWithAudio([FromBody] QuestionRequest request)
+    {
+        if (string.IsNullOrWhiteSpace(request.Question))
+            return BadRequest("Question is required.");
 
-public class QuestionRequest
-{
-    public string Question { get; set; } = "";
+        var result = await _questionService.Execute(request.Question);
+        if (!result.IsSuccess)
+            return StatusCode((int)result.HttpResponse.StatusCode, await result.HttpResponse.Content.ReadAsStringAsync());
+        
+        return Ok(result);
+    }
 }
