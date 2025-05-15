@@ -16,3 +16,16 @@
 - add Postgres to store 
   - pictures meta-data
   - products categories
+
+
+**Rent Server**
+RAM 1 (2) GB RAM
+10GB HDD
+
+Buy camera
+
+
+PILOT
+
+
+
